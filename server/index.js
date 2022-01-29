@@ -7,8 +7,7 @@ const PORT = process.env.PORT || 4000
 const sequelize = require('./database/sequelize')
 const bcrypt = require('bcrypt');
 const { connect } = require("./database/testConnection");
-const { Sequelize } = require("sequelize/dist");
-
+const  Sequelize = require("./database/sequelize")
 require("dotenv").config();
 const {CONNECTION_STRING} = process.env;
 
@@ -31,9 +30,9 @@ app.post("/register", async (req, res) => {
     await sequelize.query(`
     INSERT INTO users(username, firstName, lastName, email, bio, DOB, photo, password)
     VALUES (
+      '${username}',
       '${firstName}',
       '${lastName}',
-      '${username},
       '${email}',
       '${bio}',
       '${DOB}',
@@ -52,18 +51,18 @@ app.post("/login", async (req, res) => {
   const { username, password } = req.body
   const validUser = await sequelize.query(`
     SELECT * FROM users WHERE username = '${username}'
-  `)
+  `).catch(err => console.log(err))
   if(validUser[1].rowCount === 1) {
     if (bcrypt.compareSync(password, validUser[0][0].password)) {
       let authorized = {
         id: validUser[0][0].id,
         firstName: validUser[0][0].firstName,
         lastName: validUser[0][0].lastName,
-        username: validUser[0][0].username,
         bio: validUser[0][0].bio,
         email: validUser[0][0].email,
         photo: validUser[0][0].photo,
-        DOB: validUser[0][0].DOB
+        DOB: validUser[0][0].DOB,
+        username
       }
       res.status(200).send(object)
     } else {
@@ -73,7 +72,19 @@ app.post("/login", async (req, res) => {
       res.status(401).send("Username is incorrect")
   }
 })
+app.post('/api/additem', async (req, res) => {
+  const {input, user_id} = req.body
 
+sequelize.query(`
+INSERT INTO grocery_items(item_names, user_id)
+VALUES ('${input}', ${user_id});
+`).catch(err => console.log(err))
+const getList = await sequelize.query(`
+SELECT * FROM grocery_items WHERE user_id = ${user_id};
+`).catch(err => console.log(err))
+
+res.status(200).send(getList[0])
+})
 
 // catch-all for the build environment, allowing it to run prooperly
 app.get('*', function (req, res) {

@@ -15,7 +15,7 @@ function Register() {
         confirmPassword: ""
     }
     const onSubmit = (values) => {
-        axios.post('/register', values)
+        axios.post('http://localhost:4000/register', values)
         .then(res => {
             console.log(res.data)
             localStorage.setItem('firstName', res.data[0][0].firstName)
@@ -43,10 +43,10 @@ function Register() {
         if(!values.lastName) {
             errors.lastName = "Last name is required"
         }
-        if(values.confirmPassword) {
+        if(!values.confirmPassword) {
             errors.confirmPassword = "Please confirm password"
-        } else if(values.password !== confirmPassword) {
-            errors.password = "Passwords must match"
+        } else if(values.password !== values.confirmPassword) {
+            errors.confirmPassword = "Passwords must match"
         }
         return errors
     }
@@ -58,6 +58,7 @@ function Register() {
   
   
   return <div>
+      <h2>Register</h2>
         <form onSubmit={formik.handleSubmit}>
             <input
                 type="text"
@@ -123,7 +124,7 @@ function Register() {
                 value={formik.values.confirmPassword}
                 placeholder='Confirm Password'
             />
-            <button type="submit" disabled={formik.isValid}>Submit</button>
+            <button type="submit" disabled={!formik.isValid}>Submit</button>
         </form>
         <div>
             {formik.errors.username ? <div>{formik.errors.username}</div> : null}
