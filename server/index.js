@@ -80,12 +80,13 @@ app.post("/login", async (req, res) => {
 app.post('/api/additem', async (req, res) => {
   const {input, user_id} = req.body
 
-sequelize.query(`
+const send = await sequelize.query(`
 INSERT INTO grocery_items(item_names, user_id)
 VALUES ('${input}', ${user_id});
 `).catch(err => console.log(err))
 const getList = await sequelize.query(`
-SELECT * FROM grocery_items WHERE user_id = ${user_id};
+SELECT * FROM grocery_items WHERE user_id = ${user_id}
+ORDER BY ;
 `).catch(err => console.log(err))
 
 res.status(200).send(getList[0])

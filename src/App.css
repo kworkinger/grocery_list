@@ -22,6 +22,7 @@
 
 .heading {
   font-family: "Segoe UI";
+  padding: 10px;
 }
 
 .user {
@@ -50,4 +51,27 @@
   width: 100vw;
   background-image: url("https://images.pexels.com/photos/3184192/pexels-photo-3184192.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940");
   object-fit: cover;
+}
+
+.title {
+  color: lightgreen;
+}
+
+.registerForm {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+input {
+  border-radius: 3px;
+  margin: 10px;
+  width: 15vw;
+  height: 3vh;
+}
+
+button {
+  width: 8vw;
+  height: 3vh;
+  border-radius: 3px;
 }

@@ -59,8 +59,8 @@ function Register() {
   
   
   return <div className='register'>
-      <h2>Register</h2>
-        <form onSubmit={formik.handleSubmit}>
+      <h2 className='title'>Register</h2>
+        <form className='registerForm'onSubmit={formik.handleSubmit}>
             <input
                 type="text"
                 name="username"

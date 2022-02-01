@@ -7,10 +7,11 @@ import GroceryList from "./GroceryList";
 function Landing() {
   const [groceries, setGroceries] = useState([
   ])
-    const user_id = localStorage.getItem("user_id")
-    const firstname = localStorage.getItem("firstName")
-    const lastname = localStorage.getItem("lastName")
-
+  const user_id = localStorage.getItem("user_id")
+  const firstname = localStorage.getItem("firstName")
+  const lastname = localStorage.getItem("lastName")
+  let counter = 0
+  
   useEffect( () => {
     axios.get(`http://localhost:4000/api/getitems/${user_id}`)
     .then(res => {
@@ -18,9 +19,11 @@ function Landing() {
       setGroceries(res.data)
     })
     .catch( (err) => {
-      console.log(err.message)
+      console.log(err.response.data)
     })
-  },[])
+  },[counter])
+
+console.log(groceries)
 
   const [input, setInput] = useState('')
   const handleInput = (e) => {
@@ -32,9 +35,10 @@ function Landing() {
     .then( (res) => {
       console.log(res)
       setGroceries(res.data)
+      counter ++
     })
     .catch( (err) => {
-      console.log(err.message)
+      console.log(err.response.data)
     })
 
   }
@@ -48,9 +52,16 @@ function Landing() {
       setGroceries(res.data)
     })
     .catch( (err) => {
-      console.log(err.message)
+      console.log(err.response.data)
     })
   }
+
+  const groceriesMapped = groceries.map((groceryItem) => {
+    return (
+      <GroceryList item={groceryItem} handleDelete={handleDelete}/>
+
+    )
+  })
 
   return (
     <div className='landing'>
@@ -59,7 +70,7 @@ function Landing() {
         <input type="text" onChange={handleInput} value={input} placeholder="item"/>
         <button onClick={handleSubmit}>Add</button>
       </label>
-      <GroceryList groceries={groceries} handleDelete={handleDelete} />
+      {groceriesMapped}
     </div>
   )
 }
