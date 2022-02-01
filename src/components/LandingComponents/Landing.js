@@ -1,12 +1,16 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import Header from '../Header';
 import GroceryList from "./GroceryList";
 
 
-function Landing(props) {
+function Landing() {
   const [groceries, setGroceries] = useState([
   ])
     const user_id = localStorage.getItem("user_id")
+    const firstname = localStorage.getItem("firstName")
+    const lastname = localStorage.getItem("lastName")
+
   useEffect( () => {
     axios.get(`http://localhost:4000/api/getitems/${user_id}`)
     .then(res => {
@@ -49,7 +53,8 @@ function Landing(props) {
   }
 
   return (
-    <div>
+    <div className='landing'>
+      <Header firstname={firstname} lastname={lastname} />
       <label> Groceries:
         <input type="text" onChange={handleInput} value={input} placeholder="item"/>
         <button onClick={handleSubmit}>Add</button>

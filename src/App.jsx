@@ -21,7 +21,7 @@ function App() {
       <Routes>
         <Route path="*" element={isLoggedIn ? <Landing /> : <Login loginFunction={loginUser}/>} />
         <Route path="register" element={<Register />} />
-        <Route path="/landing" element={<Landing />} />
+        {/* <Route path="/landing" element={<Landing />} /> */}
       </Routes>
     </div>
   );

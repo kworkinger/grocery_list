@@ -46,7 +46,7 @@ function Login(props) {
         validate
     })
 
-    return <div>
+    return <div className='login'>
         <h2>Login</h2>
         <form onSubmit={formik.handleSubmit}>
             <input
