@@ -13,6 +13,7 @@ function Login(props) {
     const onSubmit = (values) => {
         axios.post('http://localhost:4000/login', values)
         .then(res => {
+            console.log(res)
             localStorage.setItem('user_id', res.data.user_id)
             localStorage.setItem('firstName', res.data.firstName)
             localStorage.setItem('lastName', res.data.lastName)

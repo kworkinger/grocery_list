@@ -18,17 +18,18 @@ app.use(cors());
 
 //Endpoints
 app.post("/register", async (req, res) => {
+  const photos = null
   const {username, firstName, lastName, email, bio, DOB, photo, password } = req.body
   const checkUser = await sequelize.query(`
-  SELECT * FROM users WHERE username = '${username}'
+  SELECT * FROM registry WHERE username = '${username}'
   `)
   if(checkUser[1].rowCount !== 0) {
     res.status(500).send('Username already exists')
   } else {
     const salt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(password, salt)
-    await sequelize.query(`
-    INSERT INTO users(username, firstName, lastName, email, bio, DOB, photo, password)
+    sequelize.query(`
+    INSERT INTO registry(username, firstname, lastname, email, bio, dob, photo, password)
     VALUES (
       '${username}',
       '${firstName}',
@@ -36,13 +37,16 @@ app.post("/register", async (req, res) => {
       '${email}',
       '${bio}',
       '${DOB}',
-      '${photo}',
+      ${photos},
       '${passwordHash}'
-    )
+    );
     `)
+    .catch(err => (err.message))
+
     const userInfo  = await sequelize.query(`
-      SELECT id, username, firstName, lastName, email, bio, DOB, photo FROM users WHERE username = '${username}'
+      SELECT * FROM registry WHERE username = '${username}'
       `)
+      console.log(userInfo[0])
       res.status(200).send(userInfo)
   }
 })
@@ -50,18 +54,19 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { username, password } = req.body
   const validUser = await sequelize.query(`
-    SELECT * FROM users WHERE username = '${username}'
+    SELECT * FROM registry WHERE username = '${username}'
   `).catch(err => console.log(err))
+  console.log(validUser)
   if(validUser[1].rowCount === 1) {
     if (bcrypt.compareSync(password, validUser[0][0].password)) {
-      let authorized = {
-        id: validUser[0][0].id,
-        firstName: validUser[0][0].firstName,
-        lastName: validUser[0][0].lastName,
+      let object = {
+        user_id: validUser[0][0].user_id,
+        firstName: validUser[0][0].firstname,
+        lastName: validUser[0][0].lastname,
         bio: validUser[0][0].bio,
         email: validUser[0][0].email,
         photo: validUser[0][0].photo,
-        DOB: validUser[0][0].DOB,
+        DOB: validUser[0][0].dob,
         username
       }
       res.status(200).send(object)
@@ -85,6 +90,30 @@ SELECT * FROM grocery_items WHERE user_id = ${user_id};
 
 res.status(200).send(getList[0])
 })
+
+app.delete('/api/delete', async (req, res) => {
+  console.log(req.body)  
+  await sequelize.query(`
+    DELETE from grocery_items
+    WHERE item_id = ${req.body.item_id}
+  `)
+  .catch(err => console.log(err))
+  const getList = await sequelize.query(`
+SELECT * FROM grocery_items WHERE user_id = ${req.body.user_id};
+`)
+res.status(200).send(getList[0])
+
+  // res.sendStatus(200)
+})
+
+app.get("/api/getitems/:user_id", (req, res) => {
+
+  const { user_id } = req.params
+  sequelize.query(`
+  SELECT * FROM grocery_items WHERE user_id = ${user_id};
+  `).then(data => res.status(200).send(data[0]))
+})
+
 
 // catch-all for the build environment, allowing it to run prooperly
 app.get('*', function (req, res) {
