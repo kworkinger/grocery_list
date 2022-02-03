@@ -1,7 +1,7 @@
 import React from 'react';
 import { useFormik } from 'formik'
 import axios from 'axios'
-import { useNavigate } from "react-router-dom"
+import { useNavigate, Link } from "react-router-dom"
 import Register from './Register';
 
 function Login(props) {
@@ -21,9 +21,8 @@ function Login(props) {
             localStorage.setItem('email', res.data.email)
             localStorage.setItem('bio', res.data.bio)
             localStorage.setItem('DOB', res.data.DOB)
-            localStorage.setItem('photo', res.data.photo)
             props.loginFunction()
-            navigate('/Landing')
+            navigate('/landing')
         })
         .catch(err => {
             console.log(err.response.data)
@@ -47,7 +46,7 @@ function Login(props) {
     })
 
     return <div className='login'>
-        <h2>Login</h2>
+        <h2 className='loginTitle'>Login</h2>
         <form onSubmit={formik.handleSubmit}>
             <input
                 type="text"
@@ -66,7 +65,9 @@ function Login(props) {
             <button type="submit" disabled={!formik.isValid}>Login</button>
         </form>
         <small>Not a user? Click here to register.</small>
-        <button>Register</button>
+        <Link to="/register">
+        Register
+        </Link>
     </div>;
 }
 

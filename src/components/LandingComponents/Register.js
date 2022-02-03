@@ -1,8 +1,12 @@
 import React from 'react';
 import { useFormik } from 'formik'
+import { useNavigate } from 'react-router';
 import axios from 'axios'
+import swal from 'sweetalert'
 
-function Register() {
+
+function Register(props) {
+    const navigate = useNavigate()
     const initialValues = {
         username: "",
         firstName: "",
@@ -10,7 +14,6 @@ function Register() {
         email: "",
         bio: "",
         DOB: "",
-        photo:"",
         password: "",
         confirmPassword: ""
     }
@@ -18,15 +21,24 @@ function Register() {
         axios.post('http://localhost:4000/register', values)
         .then(res => {
             console.log(res.data)
-            localStorage.setItem('user_id', res.data[0][0].user_id)
-            localStorage.setItem('firstName', res.data[0][0].firstname)
-            localStorage.setItem('lastName', res.data[0][0].lastname)
-            localStorage.setItem('username', res.data[0][0].username)
-            localStorage.setItem('bio', res.data[0][0].bio)
-            localStorage.setItem('DOB', res.data[0][0].dob)
-            localStorage.setItem('photo', res.data[0][0].photo)
+            localStorage.setItem('user_id', res.data[0].user_id)
+            localStorage.setItem('firstName', res.data[0].firstname)
+            localStorage.setItem('lastName', res.data[0].lastname)
+            localStorage.setItem('username', res.data[0].username)
+            localStorage.setItem('bio', res.data[0].bio)
+            localStorage.setItem('DOB', res.data[0].dob)
+            localStorage.setItem('email', res.data[0].email)
+            props.loginFunction()
+            navigate("/landing")
         })
-        .catch(err => console.log(err.response.data))
+        .catch(err => {
+            swal({
+            title: "Error",
+            text: err.response.data,
+            icon: "warning",
+            button: "Aww yiss!",
+          });
+        })
     }
     const validate = (values) => {
         const errors = {}
@@ -104,14 +116,6 @@ function Register() {
                 placeholder='Date of Birth'
             />
             <input
-                type="image"
-                name="profilePhoto"
-                alt="Profile Photo"
-                onChange={formik.handleChange}
-                value={formik.values.photo}
-                placeholder="Your Photo"
-            />
-            <input
                 type="password"
                 name="password"
                 onChange={formik.handleChange}
@@ -134,7 +138,6 @@ function Register() {
             {formik.errors.email ? <div>{formik.errors.email}</div> : null}
             {formik.errors.bio ? <div>{formik.errors.bio}</div> : null}
             {formik.errors.DOB ? <div>{formik.errors.DOB}</div> : null}
-            {formik.errors.photo ? <div>{formik.errors.photo}</div> : null}
             {formik.errors.password ? <div>{formik.errors.password}</div> : null}
             {formik.errors.confirmPassword ? <div>{formik.errors.confirmPassword}</div> : null}
         </div>

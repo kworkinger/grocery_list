@@ -10,7 +10,7 @@ function App() {
   const loginUser = () => setIsLoggedIn(!isLoggedIn)
 
   useEffect(() => {
-    if(localStorage.getItem('id')) {
+    if(localStorage.getItem('user_id')) {
       setIsLoggedIn(true)
     }
   }, [])
@@ -20,7 +20,7 @@ function App() {
       
       <Routes>
         <Route path="*" element={isLoggedIn ? <Landing /> : <Login loginFunction={loginUser}/>} />
-        <Route path="register" element={<Register />} />
+        <Route path="register" element={isLoggedIn ? <Landing /> : <Register loginFunction={loginUser}/>} />
         {/* <Route path="/landing" element={<Landing />} /> */}
       </Routes>
     </div>

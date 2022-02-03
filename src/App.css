@@ -23,11 +23,14 @@
 .heading {
   font-family: "Segoe UI";
   padding: 10px;
+  color: darkred;
 }
 
 .user {
   display: flex;
-  padding-left: 20px;
+  flex-direction: column;
+  padding-right: 5vw;
+  text-align: right;
 }
 
 .landing {
@@ -66,12 +69,33 @@
 input {
   border-radius: 3px;
   margin: 10px;
-  width: 15vw;
-  height: 3vh;
+  width: 150px;
+  height: 30px;
 }
 
 button {
-  width: 8vw;
-  height: 3vh;
+  width: 100px;
+  height: 30px;
   border-radius: 3px;
+  margin: 10px;
+}
+
+.loginTitle {
+  color: darkorange;
+}
+
+small {
+  color: white;
+}
+
+h2 {
+  color: teal;
+}
+
+h3 {
+  color: darkblue;
+}
+
+label {
+  color: mediumvioletred;
 }

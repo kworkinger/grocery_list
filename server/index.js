@@ -18,8 +18,7 @@ app.use(cors());
 
 //Endpoints
 app.post("/register", async (req, res) => {
-  const photos = null
-  const {username, firstName, lastName, email, bio, DOB, photo, password } = req.body
+  const {username, firstName, lastName, email, bio, DOB, password } = req.body
   const checkUser = await sequelize.query(`
   SELECT * FROM registry WHERE username = '${username}'
   `)
@@ -29,7 +28,7 @@ app.post("/register", async (req, res) => {
     const salt = bcrypt.genSaltSync(10)
     const passwordHash = bcrypt.hashSync(password, salt)
     sequelize.query(`
-    INSERT INTO registry(username, firstname, lastname, email, bio, dob, photo, password)
+    INSERT INTO registry(username, firstname, lastname, email, bio, dob, password)
     VALUES (
       '${username}',
       '${firstName}',
@@ -37,7 +36,6 @@ app.post("/register", async (req, res) => {
       '${email}',
       '${bio}',
       '${DOB}',
-      ${photos},
       '${passwordHash}'
     );
     `)
@@ -47,7 +45,7 @@ app.post("/register", async (req, res) => {
       SELECT * FROM registry WHERE username = '${username}'
       `)
       console.log(userInfo[0])
-      res.status(200).send(userInfo)
+      res.status(200).send(userInfo[0])
   }
 })
 
@@ -65,7 +63,6 @@ app.post("/login", async (req, res) => {
         lastName: validUser[0][0].lastname,
         bio: validUser[0][0].bio,
         email: validUser[0][0].email,
-        photo: validUser[0][0].photo,
         DOB: validUser[0][0].dob,
         username
       }
@@ -86,7 +83,7 @@ VALUES ('${input}', ${user_id});
 `).catch(err => console.log(err))
 const getList = await sequelize.query(`
 SELECT * FROM grocery_items WHERE user_id = ${user_id}
-ORDER BY ;
+ORDER BY item_id ASC;
 `).catch(err => console.log(err))
 
 res.status(200).send(getList[0])

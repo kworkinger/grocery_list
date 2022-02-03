@@ -9,6 +9,7 @@ export default function Header(props) {
       </div>
       <div className="user">
       <h2>{props.firstname} {props.lastname}</h2>
+      <h3>{props.bio}</h3>
       </div>
 
   </div>
