@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Header from './Header';
 import GroceryList from "./GroceryList";
 
-
 function Landing() {
   const [groceries, setGroceries] = useState([
   ])
